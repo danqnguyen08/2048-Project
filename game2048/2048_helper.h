@@ -6,6 +6,45 @@ using namespace std;
 void move_left(int board[][5], int numrows = 5)
 {
 	//CODE HERE
+	for (int r = 0; r < numrows; r++)
+	{
+		//Step 1: slide non-zero tiles to the left
+		int temp[5] = {0,0,0,0,0};
+		int pos = 0;
+		for (int c = 0; c < 5; c++)
+		{
+			if (board[r][c] != 0)
+			{
+				temp[pos] = board[r][c];
+				pos++;
+			}
+		}
+
+		//Step 2: merge equal neighbors (each tile merges at most once)
+		for (int i = 0; i < 4; i++)
+		{
+			if (temp[i] != 0 && temp[i] == temp[i + 1])
+			{
+				temp[i] = temp[i] * 2;
+				temp[i + 1] = 0;
+				i++;	//skips the tile we jsut merged into
+			}
+		}
+		//Step 3: slide again to close gaps, writing back to the board
+		pos = 0;
+		for (int c = 0; c < 5; c++)
+		{
+			board[r][c] = 0;
+		}
+		for (int i = 0; i < 5; i++)
+		{
+			if (temp[i] != 0)
+			{
+				board[r][pos] = temp[i];
+				pos++;
+			}
+		}
+	}
 }
 
 void move_right(int board[][5], int numrows = 5)
