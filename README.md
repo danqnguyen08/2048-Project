@@ -3,8 +3,8 @@
 **Session/Group:** MW, Group 22
 
 **Members (GitHub usernames):**
-- danqnguyen08
-- xxxx
+- danqnguyen08 (T875V462)
+- alxxnguyen (S583J649)
 
 ## Program Summaries
 
