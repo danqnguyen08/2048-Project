@@ -3,8 +3,9 @@
 #include <iomanip>
 using namespace std;
 
-void move_left(int board[][5], int numrows = 5)
+int move_left(int board[][5], int numrows = 5)
 {
+	int gained = 0;
 	for (int r = 0; r < numrows; r++)
 	{
 		//Step 1: slide non-zero tiles to the left
@@ -25,6 +26,7 @@ void move_left(int board[][5], int numrows = 5)
 			if (temp[i] != 0 && temp[i] == temp[i + 1])
 			{
 				temp[i] = temp[i] * 2;
+				gained += temp[i];
 				temp[i + 1] = 0;
 				i++;	//skips the tile we jsut merged into
 			}
@@ -44,10 +46,12 @@ void move_left(int board[][5], int numrows = 5)
 			}
 		}
 	}
+	return gained;
 }
 
-void move_right(int board[][5], int numrows = 5)
+int move_right(int board[][5], int numrows = 5)
 {
+	int gained = 0;
 	for (int r = 0; r < numrows; r++)
 	{
 		//Step 1: slide non-zero tiles to the right (read from the right end)
@@ -68,6 +72,7 @@ void move_right(int board[][5], int numrows = 5)
 			if (temp[i] != 0 && temp[i] == temp[i + 1])
 			{
 				temp[i] = temp[i] * 2;
+				gained += temp[i];
 				temp[i + 1] = 0;
 				i++;
 			}
@@ -89,10 +94,12 @@ void move_right(int board[][5], int numrows = 5)
 		}
 
 	}
+	return gained;
 }
 
-void move_up(int board[][5], int numrows = 5)
+int move_up(int board[][5], int numrows = 5)
 {
+	int gained = 0;
 	for (int c = 0; c < 5; c++)
 	{
 		//Step 1: slide non-zero tiles toward the top
@@ -113,6 +120,7 @@ void move_up(int board[][5], int numrows = 5)
 			if (temp[i] != 0 && temp[i] == temp[i + 1])
 			{
 				temp[i] = temp[i] * 2;
+				gained += temp[i];
 				temp[i + 1] = 0;
 				i++;
 			}
@@ -133,10 +141,12 @@ void move_up(int board[][5], int numrows = 5)
 			}
 		}
 	}
+	return gained;
 }
 
-void move_down(int board[][5], int numrows = 5)
+int move_down(int board[][5], int numrows = 5)
 {
+	int gained = 0;
 	for (int c = 0; c < 5; c++)
 	{
 		//Step 1; slide non-zero tiles toward the bottom (read from the bottom)
@@ -157,6 +167,7 @@ void move_down(int board[][5], int numrows = 5)
 			if (temp[i] != 0 && temp[i] == temp[i + 1])
 			{
 				temp[i] = temp[i]*2;
+				gained += temp[i];
 				temp[i + 1] = 0;
 				i++;
 			}
@@ -177,6 +188,7 @@ void move_down(int board[][5], int numrows = 5)
 			}
 		}
 	}
+	return gained;
 }
 
 
@@ -236,3 +248,60 @@ void insert_random(int board[][5], int numrows = 5)
 	}
 }
 
+void copy_board(int from[][5], int to[][5], int numrows = 5)
+{
+	for (int r = 0; r < numrows; r++)
+	{
+		for (int c = 0; c < 5; c++)
+		{
+			to[r][c] = from[r][c];
+		}
+	}
+}
+
+bool boards_equal(int a[][5], int b[][5], int numrows = 5)
+{
+	for (int r = 0; r < numrows; r++)
+	{
+		for (int c = 0; c < 5; c++)
+		{
+			if (a[r][c] != b[r][c])
+				return false;
+		}
+	}
+	return true;
+}
+
+int highest_tile(int board[][5], int numrows = 5)
+{
+	int highest = 0;
+	for (int r = 0; r < numrows; r++)
+	{
+		for (int c = 0; c < 5; c++)
+		{
+			if (board[r][c] > highest)
+				highest = board[r][c];
+		}
+	}
+	return highest;
+}
+
+void new_game(int board[][5], int numrows = 5)
+{
+	for (int r = 0; r < numrows; r++)
+	{
+		for (int c = 0; c < 5; c++)
+		{
+			board[r][c] = 0;
+		}
+	}
+	insert_random(board, numrows);
+	insert_random(board, numrows);
+}
+
+void print_status(int board[][5], int numrows, int score, int moves)
+{
+	print_board(board, numrows);
+	cout << "\tScore: " << score << "   Moves: " << moves
+	     << "   Highest tile: " << highest_tile(board, numrows) << endl << endl;
+}
