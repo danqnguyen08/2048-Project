@@ -17,6 +17,7 @@ int main()
 	int board[5][5];
 	int score = 0;
 	int moves = 0;
+	bool won = false;
 
 	new_game(board, size);
 
@@ -50,6 +51,7 @@ int main()
 				new_game(board, size);
 				score = 0;
 				moves = 0;
+				won = false;
 				cout << "New game started." << endl;
 				print_status(board, size, score, moves);
 			}
@@ -60,25 +62,42 @@ int main()
 		}
 		else if (choice == 'u' || choice == 'd' || choice == 'l' || choice == 'r')
 		{
-			int before[5][5];
-			copy_board(board, before, size);
-
-			if (choice == 'u')
-				score += move_up(board, size);
-			else if (choice == 'd')
-				score += move_down(board, size);
-			else if (choice == 'l')
-				score += move_left(board, size);
+			if (is_game_over(board, size))
+			{	
+				cout << "Game over: no moves are possible. Use n for a new game or e to exit." << endl;
+			}	
 			else
-				score += move_right(board, size);
-
-			// only a move that changed the board counts and adds a tile
-			if (!boards_equal(before, board, size))
 			{
-				insert_random(board, size);
-				moves++;
-			}
-			print_status(board, size, score, moves);
+				int before[5][5];
+				copy_board(board, before, size);
+
+				if (choice == 'u')
+					score += move_up(board, size);
+				else if (choice == 'd')
+					score += move_down(board, size);
+				else if (choice == 'l')
+					score += move_left(board, size);
+				else
+					score += move_right(board, size);
+
+				// only a move that changed the board counts and adds a tile
+				if (!boards_equal(before, board, size))
+				{
+					insert_random(board, size);
+					moves++;
+				}
+				print_status(board, size, score, moves);
+
+				if (!won && highest_tile(board, size) >= 2048)
+				{
+					cout << "You reached 2048! You can keep playing." << endl;
+					won = true;
+				}
+				if (is_game_over(board, size))	
+				{	
+					cout << "Game over! No empty cells and no equal neighbors." << endl;
+				}	
+			}	
 		}
 		else
 		{

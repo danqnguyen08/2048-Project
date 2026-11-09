@@ -305,3 +305,20 @@ void print_status(int board[][5], int numrows, int score, int moves)
 	cout << "\tScore: " << score << "   Moves: " << moves
 	     << "   Highest tile: " << highest_tile(board, numrows) << endl << endl;
 }
+
+bool is_game_over(int board[][5], int numrows = 5)
+{
+	for (int r = 0; r < numrows; r++)
+	{
+		for (int c = 0; c < 5; c++)
+		{
+			if (board[r][c] == 0)
+				return false;	// an empty cell means a move is possible
+			if (c < 4 && board[r][c] == board[r][c + 1])
+				return false;	// equal neighbors side by side
+			if (r < numrows - 1 && board[r][c] == board[r + 1][c])
+				return false;	// equal neighbors one above the other
+		}
+	}
+	return true;
+}
