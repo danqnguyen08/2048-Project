@@ -9,6 +9,9 @@ void print_help()
 	cout << "  n = new game (asks you to confirm)" << endl;
 	cout << "  h = show this help" << endl;
 	cout << "  e = exit" << endl;
+	cout << "  s = save game" << endl;
+	cout << "  o = open saved game" << endl;
+	cout << "  Saving replaces the previous savegame.txt." << endl;
 }
 
 int main()
@@ -28,7 +31,7 @@ int main()
 	char choice = 'u';	//initialized
 	while (choice != 'e')
 	{
-		cout << "Please enter choice (u,d,l,r,n,h,e): ";
+		cout << "Please enter choice (u,d,l,r,s,o,n,h,e): ";
 		if (!(cin >> choice))
 			break;	// end of input
 
@@ -40,6 +43,27 @@ int main()
 		{
 			print_help();
 		}
+		else if (choice == 's')
+		{
+   			 if (save_game(board, score, moves))
+       		 cout << "Game saved successfully." << endl;
+   		 else
+       		 cout << "Error saving game." << endl;
+		}
+		else if (choice == 'o')
+		{
+   			if (load_game(board, score, moves))
+    		{
+       			won = (highest_tile(board, size) >= 2048);
+
+      			cout << "Game loaded successfully." << endl;
+        print_status(board, size, score, moves);
+    }
+    else
+    {
+        cout << "Error loading game." << endl;
+    }
+	}
 		else if (choice == 'n')
 		{
 			char answer = 'n';
@@ -64,7 +88,7 @@ int main()
 		{
 			if (is_game_over(board, size))
 			{	
-				cout << "Game over: no moves are possible. Use n for a new game or e to exit." << endl;
+				cout << "Game over! Use s to save, o to load, n for a new game, h for help, or e to exit." << endl;
 			}	
 			else
 			{

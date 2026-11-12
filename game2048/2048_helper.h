@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <random>
 #include <iomanip>
 using namespace std;
@@ -321,4 +322,128 @@ bool is_game_over(int board[][5], int numrows = 5)
 		}
 	}
 	return true;
+	
+}
+
+
+ // Check if a tile is valid
+bool valid_tile(int tile)
+{
+    if (tile == 0)
+        return true;
+
+    if (tile < 2)
+        return false;
+
+    while (tile > 1)
+    {
+        if (tile % 2 != 0)
+            return false;
+
+        tile = tile / 2;
+    }
+
+    return true;
+}
+
+
+// Save the current game
+bool save_game(const int board[][5], int score, int moves)
+{
+    ofstream file("savegame.txt");
+
+    if (!file.is_open())
+        return false;
+
+    file << "CS211_2048_V1" << endl;
+    file << score << " " << moves << endl;
+
+    for (int r = 0; r < 5; r++)
+    {
+        for (int c = 0; c < 5; c++)
+        {
+            if (c > 0)
+                file << " ";
+
+            file << board[r][c];
+        }
+
+        file << endl;
+    }
+
+    file.close();
+
+    if (file.fail())
+        return false;
+
+    return true;
+}
+
+
+bool load_game(int board[][5], int& score, int& moves)
+{
+    ifstream file("savegame.txt");
+
+    if (!file.is_open())
+        return false;
+
+    char marker[32] = {};
+    const char expected[] = "CS211_2048_V1";
+
+    int saved_score;
+    int saved_moves;
+    int saved_board[5][5];
+
+    if (!(file >> setw(32) >> marker))
+        return false;
+
+    int i = 0;
+
+    while (expected[i] != '\0' &&
+           marker[i] == expected[i])
+    {
+        i++;
+    }
+
+    if (expected[i] != '\0' || marker[i] != '\0')
+        return false;
+
+    if (!(file >> saved_score >> saved_moves))
+        return false;
+
+    if (saved_score < 0 || saved_moves < 0)
+        return false;
+
+    for (int r = 0; r < 5; r++)
+    {
+        for (int c = 0; c < 5; c++)
+        {
+            if (!(file >> saved_board[r][c]))
+                return false;
+
+            if (!valid_tile(saved_board[r][c]))
+                return false;
+        }
+    }
+
+    char extra;
+
+    if (file >> extra)
+        return false;
+
+    if (file.bad())
+        return false;
+
+    for (int r = 0; r < 5; r++)
+    {
+        for (int c = 0; c < 5; c++)
+        {
+            board[r][c] = saved_board[r][c];
+        }
+    }
+
+    score = saved_score;
+    moves = saved_moves;
+
+    return true;
 }
